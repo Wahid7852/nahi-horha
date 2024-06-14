@@ -1,5 +1,7 @@
 console.log("Welcome to the game");
 
+let gameEnded = false;
+
 const gamestartbutton = document.querySelector(".start-game");
 const cover_game = document.querySelector(".cover-game");
 const container = document.querySelector(".container");
@@ -8,7 +10,7 @@ gamestartbutton.addEventListener("click", () => {
     container.classList.remove("active");
 });
 
-let currentPlayer = 1; // Tracks the current player (Player 1 starts)
+let currentPlayer = 'X'; // Tracks the current player (Player 1 starts)
 let firstPlayerName, secondPlayerName, firstPlayerColor, secondPlayerColor;
 
 const gameboard = document.querySelector(".connect-4-game");
@@ -26,7 +28,7 @@ const hoverCoins = new Array(7).fill(null);
 // Create a 2D array to track the game state
 const rows = 6;
 const columns = 7;
-const coins = Array.from({ length: rows }, () => Array(columns).fill(0));
+const coins = Array.from({ length: rows }, () => Array(columns).fill(null));
 
 const firstname = document.querySelector(".firstname");
 const secondname = document.querySelector(".secondname");
@@ -132,13 +134,14 @@ cells.forEach((cell, index) => {
 function onMouseClickInCell(column) {
     const row = getAvailableRow(column);
     if (row !== -1) {
-        const currentColor = currentPlayer === 1 ? firstPlayerColor : secondPlayerColor;
+        const currentColor = currentPlayer === 'X' ? firstPlayerColor : secondPlayerColor;
         placeCoin(row, column, currentColor);
 
-        if (checkForWin(row, column, currentColor)) {
+        if (checkWinner(coins, row, column)) {
             winningbox.textContent = "Winner";
-            winningbox.style.background = currentPlayer === 1 ? firstPlayerColor : secondPlayerColor;
+            winningbox.style.background = currentPlayer === 'X' ? firstPlayerColor : secondPlayerColor;
             winningbox.style.display = "block";
+            gameEnded = true; // Stop the game
             return;
         }
 
@@ -146,10 +149,11 @@ function onMouseClickInCell(column) {
             winningbox.textContent = "It's a draw!";
             winningbox.style.background = "#cccccc";
             winningbox.style.display = "block";
+            gameEnded = true; // Stop the game
             return;
         }
 
-        currentPlayer = currentPlayer === 1 ? 2 : 1; // Switch to the next player
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X'; // Switch to the next player
         updatePlayerName(); // Update player's name after the turn changes
         removeHoverCoin(column); // Remove hover coin after placing
     }
@@ -157,12 +161,12 @@ function onMouseClickInCell(column) {
 
 function updatePlayerName() {
     const playerName = document.querySelector(".playerchance");
-    playerName.textContent = currentPlayer === 1 ? `${firstPlayerName}'s turn` : `${secondPlayerName}'s turn`;
+    playerName.textContent = currentPlayer === 'X' ? `${firstPlayerName}'s turn` : `${secondPlayerName}'s turn`;
 }
 
 function getAvailableRow(column) {
     for (let row = rows - 1; row >= 0; row--) {
-        if (coins[row][column] === 0) {
+        if (coins[row][column] === null) {
             return row;
         }
     }
@@ -200,7 +204,7 @@ function onMouseHoverInCell(column) {
     if (topCell) {
         let coin = document.createElement("div");
         coin.className = "coin hover-coin";
-        coin.style.backgroundColor = currentPlayer === 1 ? firstPlayerColor : secondPlayerColor; // Red for Player 1, Green for Player 2
+        coin.style.backgroundColor = currentPlayer === 'X' ? firstPlayerColor : secondPlayerColor; // Red for Player 1, Green for Player 2
         coin.dataset.placed = false;
 
         // Add hover coin to the cell and store it
@@ -228,94 +232,98 @@ function removeHoverCoin(column) {
     }
 }
 
-function checkForWin(row, column, color) {
-    console.log("Checking for win...");
-    const win =
-        checkHorizontalWin(row, column, color) ||
-        checkVerticalWin(row, column, color) ||
-        checkDiagonalWin(row, column, color);
-    console.log("Win:", win);
-    return win;
-}
-
-function checkHorizontalWin(row, column, color) {
-    console.log("Checking horizontal win...");
-    const player = color === firstPlayerColor ? 1 : 2;
-    let count = 0;
-    for (let c = Math.max(0, column - 3); c <= Math.min(columns - 1, column + 3); c++) {
-        if (coins[row][c] === player) {
-            count++;
-            if (count === 4) {
-                console.log("Horizontal win!");
-                return true;
+function checkWinner(board, row, col) {
+    if (checkHorizontal(board, row, col) || checkVertical(board, row, col) || checkDiagonal(board, row, col)) {
+        const player = board[row][col] === 'X' ? '1' : '2';
+        setTimeout(() => {
+            alert('Player ' + player + ' wins!');
+            const restart = confirm('Do you want to restart the game?');
+            if (restart) {
+                resetGame();
             }
-        } else {
-            count = 0;
-        }
-    }
-    return false;
-}
-
-function checkVerticalWin(row, column, color) {
-    console.log("Checking vertical win...");
-    const player = color === firstPlayerColor ? 1 : 2;
-    let count = 0;
-    for (let r = Math.max(0, row - 3); r <= Math.min(rows - 1, row + 3); r++) {
-        if (coins[r][column] === player) {
-            count++;
-            if (count === 4) {
-                console.log("Vertical win!");
-                return true;
-            }
-        } else {
-            count = 0;
-        }
-    }
-    return false;
-}
-
-function checkDiagonalWin(row, column, color) {
-    console.log("Checking diagonal win...");
-    const player = color === firstPlayerColor ? 1 : 2;
-    let count = 0;
-
-    // Check \ diagonal
-    for (let r = row, c = column; r >= 0 && c >= 0; r--, c--) {
-        if (coins[r][c] === player) count++;
-        else break;
-    }
-    for (let r = row + 1, c = column + 1; r < rows && c < columns; r++, c++) {
-        if (coins[r][c] === player) count++;
-        else break;
-    }
-    if (count >= 4) {
-        console.log("Diagonal win (\\)!");
+        }, 100); // Delay the popup to show the winning move
         return true;
     }
+    return false;
+}
 
-    // Check / diagonal
+function resetGame() {
+    window.location.reload();
+}
+
+function checkHorizontal(board, row, col) {
+    let count = 1; // Start with 1 to account for the initial dot
+    let current = board[row][col];
+    if (current === null) return false;
+    // Check to the right
+    for (let i = 1; col + i < board[row].length; i++) {
+        if (board[row][col + i] === current) {
+            count++;
+            if (count === 4) return true;
+        } else {
+            break;
+        }
+    }
+    // Check to the left
+    for (let i = 1; col - i >= 0; i++) {
+        if (board[row][col - i] === current) {
+            count++;
+            if (count === 4) return true;
+        } else {
+            break;
+        }
+    }
+    return false;
+}
+
+function checkVertical(board, row, col) {
+    let count = 0;
+    let current = board[row][col];
+    if (current === null) return false;
+    for (let i = row; i < board.length; i++) {
+        if (board[i][col] === current) {
+            count++;
+            if (count === 4) return true;
+        } else {
+            break;
+        }
+    }
+    return false;
+}
+
+function checkDiagonal(board, row, col) {
+    let count = 0;
+    let current = board[row][col];
+    if (current === null) return false;
+
+    // Check right-down diagonal
+    for (let i = 0; i + row < board.length && i + col < board[row].length; i++) {
+        if (board[row + i][col + i] === current) {
+            count++;
+            if (count === 4) return true;
+        } else {
+            break;
+        }
+    }
+
+    // Check left-down diagonal
     count = 0;
-    for (let r = row, c = column; r >= 0 && c < columns; r--, c++) {
-        if (coins[r][c] === player) count++;
-        else break;
-    }
-    for (let r = row + 1, c = column - 1; r < rows && c >= 0; r++, c--) {
-        if (coins[r][c] === player) count++;
-        else break;
-    }
-    if (count >= 4) {
-        console.log("Diagonal win (/)!");
-        return true;
+    for (let i = 0; row + i < board.length && col - i >= 0; i++) {
+        if (board[row + i][col - i] === current) {
+            count++;
+            if (count === 4) return true;
+        } else {
+            break;
+        }
     }
 
     return false;
 }
 
-// Check for a draw
 function checkDraw() {
     for (let row = 0; row < rows; row++) {
         for (let column = 0; column < columns; column++) {
-            if (coins[row][column] === 0) {
+            if (coins[row][column] === null) {
                 return false; // If any empty cell is found, the game is not a draw
             }
         }
