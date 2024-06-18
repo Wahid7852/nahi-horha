@@ -241,17 +241,25 @@ function removeHoverCoin(column) {
 function checkWinner(board, row, col) {
     if (checkHorizontal(board, row, col) || checkVertical(board, row, col) || checkDiagonal(board, row, col)) {
         const player = board[row][col] === 'X' ? '1' : '2';
-        setTimeout(() => {
-            alert(`Player ${player} wins!`);
-            const restart = confirm('Do you want to restart the game?');
-            if (restart) {
-                resetGame();
-            }
-        }, 100); // Delay the popup to show the winning move
+	const winnerPopup = document.querySelector('.winner-popup');
+        const winnerName = document.querySelector('.winner-name');
+
+        winnerName.textContent = 'Player ${playerName} wins!';
+        winnerPopup.style.display = 'block';
+
+        document.querySelector('.restart-game').addEventListener('click', () => {
+            resetGame(); // Call the resetGame function to restart the game
+            winnerPopup.style.display = 'none'; // Hide the popup
+        });
+
         return true;
     }
     return false;
 }
+
+ document.querySelector('.restart-game').addEventListener('click', () => {
+    resetGame(); // Call the resetGame function to restart the game
+});
 
 function resetGame() {
     window.location.reload();
