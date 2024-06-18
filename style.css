@@ -536,7 +536,17 @@ body {
 }
 
 .winning-box-background.active{
+     display: none;
+}
+
+.celebrate{
     display: none;
+    background: url('https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExbG5qZ2RsbjY5c2l3bHRvYmRtN3Z4MWZmcXV0eTJhamN6ZmJlN2thYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/h7uTwqEHysbd2lhyDP/giphy.gif');
+   background-repeat: no-repeat;
+   background-size: cover;
+   background-position: center;
+   min-height: 100vh;
+   width: 100%;
 }
 
 .winning-box{
@@ -580,6 +590,7 @@ body {
 
 }
 .winner-play{
+     display: none; 
     width: 400px;
     height: 250px;
     background: url("https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzN3eHpnMmIweWp1djlrYW5wZDdubDhsenZzMWcwajJ4MHJyZ2tyeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/0bBGQgpJTUfTVzY6Xo/giphy.gif") ;
@@ -591,7 +602,7 @@ body {
 
 
 .winner-play.active{
-    display: none;
+     display: none; 
 }
 /* Media Queries */
 @media screen and (max-width: 900px) {

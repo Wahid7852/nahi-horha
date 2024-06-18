@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connect 4 dots</title>
+    <title>Connect 4 Dots</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Cover Game Section -->
     <div class="cover-game">
         <div class="text">
             <h1>Welcome to Fun Games</h1>
@@ -22,7 +23,9 @@
             </div>
         </div>
     </div>
-    <div class="container active">
+
+    <!-- Main Container -->
+    <div class="container">
         <form action="" class="form">
             <div class="text-box">
                 <h2>Enter Players Names</h2>
@@ -49,72 +52,43 @@
             </div>
             <button class="submit" type="submit">Submit</button>
         </form>
-    
-    <div class="game-body active">
-        <div class="user-info">
-            <h2>Connect-4 Master Game</h2>
-            <div class="player-box">
-                <div class="player">
-                    <span class="firstplayer">First</span>
-                    <span class="color1"></span>
+
+        <!-- Game Body -->
+        <div class="game-body">
+            <div class="user-info">
+                <h2>Connect-4 Master Game</h2>
+                <div class="player-box">
+                    <div class="player">
+                        <span class="firstplayer">First</span>
+                        <span class="color1"></span>
+                    </div>
+                    <div class="player">
+                        <span class="vst">vs</span>
+                    </div>
+                    <div class="player">
+                        <span class="secondplayer">Second</span>
+                        <span class="color2"></span>
+                    </div>
                 </div>
-                <div class="player">
-                    <span class="vst">vs</span>
-                </div>
-                <div class="player">
-                    <span class="secondplayer">Second</span>
-                    <span class="color2"></span>
-                </div>
+                <div class="playerchance">First</div>
             </div>
-            <div class="playerchance">First</div>
+            <div class="connect-4-game">
+                <!-- Game cells will be generated dynamically using JavaScript -->
+            </div>
         </div>
-        <div class="connect-4-game">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-        </div>
-    </div>
     </div>
 
+    <!-- Winning Box Section -->
+    <div class="winning-box-background">
+        <div class="celebrate"></div>
+        <div class="winning-box active">
+            <h2>Congratulations<span class="winner-name">Winner Name</span>!</h2>
+            <button class="restart">Restart Game</button>
+        </div>
+        <div class="winner-play"></div>
+    </div>
+
+    <!-- Scripts -->
     <script src="script.js"></script>
 </body>
 </html>

@@ -38,6 +38,10 @@ const form = document.querySelector(".form");
 const gamebody = document.querySelector(".game-body");
 const playerchance = document.querySelector(".playerchance");
 
+// Audio elements
+const coinDropSound = new Audio("/audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3");
+const winningSound = new Audio("/audio/win.wav");
+
 form.addEventListener("submit", (event) => {
     event.preventDefault();
     formvalidate();
@@ -95,10 +99,9 @@ const formvalidate = () => {
         success(secondcolor);
     }
 
-    if(player1.length>0 && player2.length>0 && color1 !="#000000" && color2 !="000000" & color1 != color2){
-        form.classList.add("active")
+    if (player1.length > 0 && player2.length > 0 && color1 !== "#000000" && color2 !== "#000000" && color1 !== color2) {
+        form.classList.add("active");
         gamebody.classList.remove("active");
-
 
         firstPlayerName = player1;
         secondPlayerName = player2;
@@ -138,10 +141,12 @@ function onMouseClickInCell(column) {
         placeCoin(row, column, currentColor);
 
         if (checkWinner(coins, row, column)) {
+            winnername.textContent = currentPlayer === 'X' ? firstPlayerName : secondPlayerName;
             winningbox.textContent = "Winner";
             winningbox.style.background = currentPlayer === 'X' ? firstPlayerColor : secondPlayerColor;
             winningbox.style.display = "block";
             gameEnded = true; // Stop the game
+            playWinningSound();
             return;
         }
 
@@ -156,6 +161,7 @@ function onMouseClickInCell(column) {
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X'; // Switch to the next player
         updatePlayerName(); // Update player's name after the turn changes
         removeHoverCoin(column); // Remove hover coin after placing
+        playCoinDropSound(); // Play coin drop sound
     }
 }
 
@@ -236,7 +242,7 @@ function checkWinner(board, row, col) {
     if (checkHorizontal(board, row, col) || checkVertical(board, row, col) || checkDiagonal(board, row, col)) {
         const player = board[row][col] === 'X' ? '1' : '2';
         setTimeout(() => {
-            alert('Player ' + player + ' wins!');
+            alert(`Player ${player} wins!`);
             const restart = confirm('Do you want to restart the game?');
             if (restart) {
                 resetGame();
@@ -329,4 +335,14 @@ function checkDraw() {
         }
     }
     return true; // If all cells are filled, it's a draw
+}
+
+function playCoinDropSound() {
+    coinDropSound.currentTime = 0; // Rewind to start
+    coinDropSound.play();
+}
+
+function playWinningSound() {
+    winningSound.currentTime = 0; // Rewind to start
+    winningSound.play();
 }
